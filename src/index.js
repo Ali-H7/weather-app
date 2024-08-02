@@ -27,6 +27,7 @@ function fetchData() {
       createOtherDaysElement();
     })
     .catch((err) => {
+      handleErrors();
       console.log(err);
     });
 }
@@ -182,4 +183,12 @@ function clearContent() {
   const cards = document.querySelector('.cards');
   location.textContent = '';
   cards.textContent = '';
+}
+
+function handleErrors() {
+  clearContent();
+  const location = document.querySelector('.location');
+  const errorMsg = document.createElement('h1');
+  errorMsg.textContent = 'Error 404, Try Again!';
+  location.appendChild(errorMsg);
 }
