@@ -3,7 +3,6 @@ import '@fortawesome/fontawesome-free/js/fontawesome';
 import '@fortawesome/fontawesome-free/js/solid';
 import '@fortawesome/fontawesome-free/js/regular';
 import '@fortawesome/fontawesome-free/js/brands';
-import { getDay } from 'date-fns';
 import { format } from 'date-fns';
 import { parse } from 'date-fns';
 import getIcon from './getIcons';
@@ -13,7 +12,6 @@ let country = 'saudi arabia';
 let unit = 'metric';
 let unitText = '°C';
 
-fetchData();
 function fetchData() {
   fetch(
     `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${country}/next7days?unitGroup=${unit}&include=days%2Ccurrent&key=CBH64PUQGLBV2Z47HJ6WH8ZHV&contentType=json`
@@ -23,7 +21,7 @@ function fetchData() {
     })
     .then((response) => {
       weatherData = response;
-      console.log(weatherData);
+      clearContent();
       createLocationElement();
       currentDayElement();
       createOtherDaysElement();
@@ -38,11 +36,11 @@ function getUserInput() {
   const unitCheckBox = document.querySelector('#checkbox_toggle');
   country = search.value;
   if (unitCheckBox.checked) {
-    unit = 'metric';
-    unitText = '°C';
-  } else {
     unit = 'us';
     unitText = '°F';
+  } else {
+    unit = 'metric';
+    unitText = '°C';
   }
 }
 
@@ -162,4 +160,26 @@ function createLocationElement() {
 
   location.appendChild(locationIcon);
   location.appendChild(locationName);
+}
+
+const searchBtn = document.querySelector('.search-button');
+const searchBar = document.querySelector('.search-bar');
+
+searchBar.addEventListener('keypress', (e) => {
+  if (document.activeElement === searchBar && e.key === 'Enter') {
+    getUserInput();
+    fetchData();
+  }
+});
+
+searchBtn.addEventListener('click', () => {
+  getUserInput();
+  fetchData();
+});
+
+function clearContent() {
+  const location = document.querySelector('.location');
+  const cards = document.querySelector('.cards');
+  location.textContent = '';
+  cards.textContent = '';
 }
